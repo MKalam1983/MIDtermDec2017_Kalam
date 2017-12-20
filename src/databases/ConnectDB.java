@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.connection.*;
 import org.bson.Document;
+import parser.Student;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -116,6 +117,28 @@ public class ConnectDB {
             e.printStackTrace();
         }
     }
+    public void InsertStudentFromArryToMySql(int [] ArrayStudent,String tableName, String columnName)
+    {
+        try {
+            connectToMySql();
+            ps = connect.prepareStatement("DROP TABLE IF EXISTS `"+tableName+"`;");
+            ps.executeUpdate();
+            ps = connect.prepareStatement("CREATE TABLE `"+tableName+"` (`ID` int(11) NOT NULL AUTO_INCREMENT,`SortingNumbers` bigint(20) DEFAULT NULL,  PRIMARY KEY (`ID`) );");
+            ps.executeUpdate();
+            for(int n=0; n<ArrayStudent.length; n++){
+                ps = connect.prepareStatement("INSERT INTO "+tableName+" ( "+columnName+" ) VALUES(?)");
+                ps.setInt(1,ArrayStudent[n]);
+                ps.executeUpdate();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void InsertDataFromStringToMySql(String ArrayData,String tableName, String columnName)
     {
@@ -149,11 +172,11 @@ public class ConnectDB {
         return data;
     }
 
-    public void InsertDataFromArrayListToMySql(List<Object> list,String tableName, String columnName)
+    public void InsertDataFromArrayListToMySql(ArrayList<Object> arraylist,String tableName, String columnName)
     {
         try {
             connectToMySql();
-            for(Object st:list){
+            for(Object st:arraylist){
                 ps = connect.prepareStatement("INSERT INTO "+tableName+" ( "+columnName+" ) VALUES(?)");
                 ps.setObject(1,st);
                 ps.executeUpdate();
@@ -262,4 +285,9 @@ public class ConnectDB {
 
     }
 
+    public void InsertDataFromArryListToMySql(ArrayList<String> groceries, Object p1) {
+    }
+
+    public void InsertStudentFromArrayListToMySql(List<Student> qtpStudents, String qtp, String students) {
+    }
 }
